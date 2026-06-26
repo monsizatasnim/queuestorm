@@ -19,8 +19,20 @@ def health_check(request):
 
 
 @csrf_exempt
-@require_http_methods(["POST"])
 def analyze_ticket_view(request):
+
+    if request.method == "GET":
+        return JsonResponse({
+            "message": "QueueStorm API is running.",
+            "usage": "Send a POST request with JSON to this endpoint."
+        })
+
+    if request.method != "POST":
+        return JsonResponse(
+            {"error": "Method not allowed"},
+            status=405
+        )
+
     """
     POST /analyze-ticket
     Main endpoint. Accepts ticket JSON, returns structured analysis.
